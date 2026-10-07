@@ -1,0 +1,63 @@
+---
+interface Props {
+  title?: string;
+}
+
+const { title = "Outdoor Journal" } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg-main: #514c42;
+    --card-bg: #8f8578;
+    --text-main: #efefef;
+    --text-muted: #cdcdcd;
+    --accent-sage: #546f5a;
+    --accent-hover: #4b5d50;
+    --border-light: #0b0b0b;
+    --focus-ring: #d0dad2;
+    --bg-txtarea: #d6cfbf;
+    --font-serif: 'Lora', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    margin: 0;
+    padding: 3rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      padding: 1.5rem 1rem;
+    }
+  }
+</style>

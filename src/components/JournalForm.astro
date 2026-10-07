@@ -1,0 +1,169 @@
+---
+---
+
+<section class="journal-card">
+  <div class="field-group">
+    <label for="prompt-input">What did you discover or feel today?</label>
+    <textarea 
+      id="prompt-input" 
+      rows="3" 
+      placeholder="A trail through the pines, the sound of water, a fresh evening breeze..."
+    ></textarea>
+  </div>
+
+  <button id="btn-generate" type="button" class="btn-primary">
+    <span>Reflect & Write</span>
+  </button>
+
+  <p id="status-text" class="status-text"></p>
+
+  <div class="field-group output-group">
+    <label for="journal-result">Your Journal Entry</label>
+    <textarea 
+      id="journal-result" 
+      rows="9" 
+      readonly 
+      placeholder="Your reflective entry will appear here peacefully..."
+    ></textarea>
+  </div>
+</section>
+
+<script>
+  import { generateJournalEntry } from "../lib/webllm";
+
+  const btnGenerate = document.getElementById("btn-generate") as HTMLButtonElement;
+  const promptInput = document.getElementById("prompt-input") as HTMLTextAreaElement;
+  const journalResult = document.getElementById("journal-result") as HTMLTextAreaElement;
+  const statusText = document.getElementById("status-text") as HTMLParagraphElement;
+
+  btnGenerate?.addEventListener("click", async () => {
+    const userNotes = promptInput.value.trim();
+    if (!userNotes) {
+      alert("Please jot down a few notes about your walk first.");
+      return;
+    }
+
+    try {
+      btnGenerate.disabled = true;
+      statusText.innerText = "Initializing AI model...";
+
+      const entry = await generateJournalEntry(userNotes, (percentage) => {
+        statusText.innerText = `Loading Gemma 2: ${percentage}% (first time only)`;
+      });
+
+      statusText.innerText = "Reflecting and shaping your entry...";
+      journalResult.value = entry;
+      statusText.innerText = "✨ Entry written successfully on your device!";
+
+    } catch (error) {
+      console.error(error);
+      statusText.innerText = "Error: Please make sure to use Chrome, Edge, or Brave with WebGPU enabled.";
+    } finally {
+      btnGenerate.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .journal-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  label {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-main);
+  }
+
+  textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: var(--border-light);
+    background-color: var(--bg-txtarea);
+    transition: all 0.2s ease;
+    line-height: 1.6;
+    overflow: hidden;
+    field-sizing: content;
+    resize: none;
+  }
+
+  textarea#journal-result:read-only {
+    background-color: var(--bg-txtarea); 
+    color: var(--border-light);
+    font-family: var(--font-sans);
+  }
+
+  #prompt-input::placeholder,
+  #journal-result::placeholder {
+    color: var(--border-light);
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent-sage);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+
+  .output-group textarea {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+  }
+
+  .btn-primary {
+    background-color: var(--accent-sage);
+    color: #ffffff;
+    border: none;
+    padding: 0.9rem 1.6rem;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    align-self: flex-start;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--accent-hover);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.99);
+  }
+
+  .btn-primary:disabled {
+    background-color: #c2ccc4;
+    cursor: not-allowed;
+  }
+
+  .status-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin: -0.5rem 0 0 0;
+    min-height: 1.2em;
+  }
+
+  @media (max-width: 600px) {
+    .journal-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

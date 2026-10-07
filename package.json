@@ -1,0 +1,21 @@
+{
+  "name": "hackaton-diary",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@mlc-ai/web-llm": "^0.2.85",
+    "astro": "^7.3.6"
+  },
+  "allowScripts": {
+    "esbuild": true
+  }
+}
